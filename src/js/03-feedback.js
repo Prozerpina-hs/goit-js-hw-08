@@ -15,7 +15,7 @@ const saveState = throttle(() => {
 }, 500);
 
 // Загрузка данных из локального хранилища
-const loadState = () => {
+function loadState() {
   const state = JSON.parse(localStorage.getItem(STORAGE_KEY));
   if (state) {
     emailInput.value = state.email;
@@ -23,12 +23,26 @@ const loadState = () => {
   }
 };
 
-const handleInput = () => {
+// Проверка заполненности полей "input"
+
+function checkInputs() {
+  const emailValue = emailInput.value;
+  const messageValue = messageInput.value;
+
+  if (emailValue !== '' && messageValue !== '') {
+    form.querySelector('button[type="submit"]').disabled = false;
+  } else {
+    form.querySelector('button[type="submit"]').disabled = true;
+  }
+};
+
+function handleInput()  {
   saveState();
+  checkInputs();
 };
 
 // отправка формы
-const handleSubmit = (event) => {
+function handleSubmit(event) {
   event.preventDefault();
 
   const state = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -40,8 +54,7 @@ const handleSubmit = (event) => {
 };
 
 form.addEventListener('submit', handleSubmit);
-emailInput.addEventListener('input', handleInput);
-messageInput.addEventListener('input', handleInput);
+form.addEventListener('input', handleInput);
 
 // Проверка состояние хранилища при загрузке страницы
 loadState();
